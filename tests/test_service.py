@@ -20,6 +20,7 @@ class ServiceTests(unittest.TestCase):
             self.assertEqual(room.status, "running")
             self.assertEqual(room.deadline_at_ms, clock() + 120_000)
             self.assertEqual(room.assignee, "Alex")
+            self.assertRegex(key, r"\A[0-9a-f]{48}\Z")
             self.assertEqual(service.get_room(room.room_id.lower(), key), room)
             self.assertNotIn(key.encode(), database.read_bytes())
             self.assertEqual(service.store.database_health()["integrity"], "ok")

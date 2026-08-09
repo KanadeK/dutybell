@@ -71,7 +71,7 @@ class DutyBellService:
         clean_actor = clean_name(actor, field="actor", maximum=40)
         now = self.now_ms()
         room_id = self._new_room_id()
-        access_key = secrets.token_urlsafe(24)
+        access_key = secrets.token_hex(24)
         assignee = people[0] if people else None
         room = Room(
             room_id=room_id,
