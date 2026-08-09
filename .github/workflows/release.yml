@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  release:
+    name: Verify tag and publish assets
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install pinned quality tools
+        run: python -m pip install --disable-pip-version-check -r requirements-dev.lock
+      - name: Verify tag equals project version
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: >-
+          python -c "import os,tomllib,pathlib;
+          version=tomllib.loads(pathlib.Path('pyproject.toml').read_text())['project']['version'];
+          actual=os.environ['RELEASE_TAG'];
+          expected=f'v{version}';
+          raise SystemExit(0 if actual==expected else f'tag {actual} does not match {expected}')"
+      - name: Run complete release gate
+        run: python scripts/release_check.py
+      - name: Attest release artifacts
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: "dist/*"
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "$GITHUB_REF_NAME" dist/*
+          --verify-tag
+          --title "DutyBell $GITHUB_REF_NAME"
+          --generate-notes

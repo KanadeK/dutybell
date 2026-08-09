@@ -1,0 +1,9 @@
+{
+  "name": "Dog break",
+  "interval_seconds": 7200,
+  "participants": ["Alex", "Sam"],
+  "repeat_on_ack": true,
+  "rotate_on_ack": true,
+  "start": true,
+  "actor": "Alex"
+}

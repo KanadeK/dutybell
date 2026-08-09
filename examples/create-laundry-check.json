@@ -1,0 +1,9 @@
+{
+  "name": "Laundry check",
+  "interval_seconds": 2700,
+  "participants": [],
+  "repeat_on_ack": false,
+  "rotate_on_ack": false,
+  "start": false,
+  "actor": "household"
+}

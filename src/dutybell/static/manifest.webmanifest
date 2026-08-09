@@ -1,0 +1,13 @@
+{
+  "name": "DutyBell",
+  "short_name": "DutyBell",
+  "description": "Shared household relay timers with one acknowledgement across every open device.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f3efe5",
+  "theme_color": "#16332f",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

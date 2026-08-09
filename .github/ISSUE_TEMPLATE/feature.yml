@@ -1,0 +1,27 @@
+name: Feature request
+description: Propose a concrete shared-duty workflow
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    attributes:
+      label: Household workflow
+      description: Who is coordinating what, on which devices, and what goes wrong today?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Smallest useful behavior
+      description: Describe observable behavior rather than only screens or controls.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Data, migration, and security impact
+      description: What new data or authorization would this require?
+  - type: checkboxes
+    attributes:
+      label: Scope
+      options:
+        - label: This request does not rely on DutyBell as a safety-critical alarm.
+          required: true

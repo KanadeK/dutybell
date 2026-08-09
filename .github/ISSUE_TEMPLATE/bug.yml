@@ -1,0 +1,40 @@
+name: Bug report
+description: Report reproducible incorrect DutyBell behavior
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: checkboxes
+    attributes:
+      label: Safety and privacy
+      options:
+        - label: I am not using DutyBell as a safety-critical alarm.
+          required: true
+        - label: I removed room keys, private links, names, and database contents.
+          required: true
+  - type: input
+    attributes:
+      label: Version
+      placeholder: v0.1.0 or commit SHA
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Installation
+      options: [Wheel, Source checkout, Docker, Other]
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Reproduction
+      description: Smallest exact sequence, including two-device timing when relevant.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Sanitized doctor output
+      render: json

@@ -1,0 +1,18 @@
+services:
+  dutybell:
+    build:
+      context: .
+    image: dutybell:0.1.0
+    restart: unless-stopped
+    ports:
+      - "8742:8742"
+    environment:
+      DUTYBELL_DATABASE: /data/dutybell.db
+      DUTYBELL_CREATE_TOKEN: ${DUTYBELL_CREATE_TOKEN:-}
+    volumes:
+      - dutybell-data:/data
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  dutybell-data:

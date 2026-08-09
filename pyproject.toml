@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dutybell"
+version = "0.1.0"
+description = "Self-hosted synchronized household relay timers with shared acknowledgement and duty rotation."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [
+  { name = "KanadeK", email = "121669563+KanadeK@users.noreply.github.com" },
+]
+keywords = ["timer", "household", "self-hosted", "local-first", "pwa", "synchronization"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Web Environment",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Home Automation",
+  "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+]
+
+[project.urls]
+Homepage = "https://github.com/KanadeK/dutybell"
+Repository = "https://github.com/KanadeK/dutybell"
+Issues = "https://github.com/KanadeK/dutybell/issues"
+Changelog = "https://github.com/KanadeK/dutybell/blob/main/CHANGELOG.md"
+
+[project.scripts]
+dutybell = "dutybell.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+dutybell = ["py.typed", "static/*"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+extend-exclude = ["dist", "build"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["src", "tests", "scripts"]
+
+[tool.coverage.run]
+branch = true
+source = ["dutybell"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+fail_under = 90

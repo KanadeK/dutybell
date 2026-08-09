@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">DutyBell</title>
+  <rect width="128" height="128" rx="25" fill="#16332f"/>
+  <path d="M30 82h68c-8-8-11-20-11-34 0-14-10-25-23-25S41 34 41 48c0 14-3 26-11 34Z" fill="#f3efe5"/>
+  <path d="M51 91h26c-2 9-7 14-13 14s-11-5-13-14Z" fill="#d68032"/>
+  <circle cx="64" cy="47" r="8" fill="#d68032"/>
+</svg>

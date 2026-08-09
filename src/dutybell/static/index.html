@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#16332f">
+    <meta name="description" content="A self-hosted shared timer where one acknowledgement reaches every open device.">
+    <title>DutyBell · shared household relay timers</title>
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="masthead">
+      <a class="brand" href="/" aria-label="DutyBell home">
+        <img src="/icon.svg" alt="" width="42" height="42">
+        <span>DutyBell</span>
+      </a>
+      <p class="tagline">One timer. Every screen. One clear handoff.</p>
+      <button id="installButton" class="quiet" type="button" hidden>Install app</button>
+    </header>
+
+    <main>
+      <section id="welcomeView" class="welcome-grid" aria-labelledby="welcomeTitle">
+        <div class="intro">
+          <p class="eyebrow">SELF-HOSTED HOUSEHOLD COORDINATION</p>
+          <h1 id="welcomeTitle">Stop asking, “Did anyone handle it?”</h1>
+          <p class="lede">
+            Start a shared timer for the next dog break, laundry check, oven turn, or household round.
+            Every open device stays aligned. One person acknowledges it, everyone sees the handoff.
+          </p>
+          <ul class="proof-list">
+            <li>Server-anchored time with clock-drift correction</li>
+            <li>Optional duty rotation after every acknowledgement</li>
+            <li>No accounts, ads, analytics, or third-party runtime</li>
+          </ul>
+          <p class="boundary">
+            Browser alarms require this page or installed PWA to remain open. DutyBell is not a medical,
+            emergency, or safety-critical alarm system.
+          </p>
+        </div>
+
+        <div class="entry-stack">
+          <form id="createForm" class="panel" autocomplete="off">
+            <div class="panel-heading">
+              <span class="step">01</span>
+              <div><h2>Create a bell</h2><p>Make one shared household timer.</p></div>
+            </div>
+            <label>Bell name<input name="name" required maxlength="80" value="Dog break" placeholder="Laundry check"></label>
+            <div class="field-pair">
+              <label>Minutes<input name="minutes" type="number" required min="0.02" max="10080" step="0.01" value="120"></label>
+              <label>Your name<input name="actor" required maxlength="40" value="Owner" placeholder="Alex"></label>
+            </div>
+            <label>People in rotation<textarea name="participants" rows="2" maxlength="400" placeholder="Alex, Sam">Alex, Sam</textarea></label>
+            <div class="checks">
+              <label><input name="repeat" type="checkbox" checked> Restart after acknowledgement</label>
+              <label><input name="rotate" type="checkbox" checked> Rotate the next person on duty</label>
+              <label><input name="start" type="checkbox" checked> Start immediately</label>
+            </div>
+            <details>
+              <summary>Server creation token</summary>
+              <label class="compact">Only needed when your host requires one<input name="createToken" type="password" autocomplete="off"></label>
+            </details>
+            <button class="primary" type="submit">Create and open</button>
+          </form>
+
+          <form id="joinForm" class="panel compact-panel" autocomplete="off">
+            <div class="panel-heading">
+              <span class="step">02</span>
+              <div><h2>Join an existing bell</h2><p>Paste the room code and shared key.</p></div>
+            </div>
+            <div class="field-pair join-fields">
+              <label>Room code<input name="roomId" required pattern="[A-Za-z2-7]{8}" maxlength="8" placeholder="ABC234DE"></label>
+              <label>Shared key<input name="key" type="password" required autocomplete="off"></label>
+            </div>
+            <label>Your name<input name="actor" required maxlength="40" placeholder="Sam"></label>
+            <button class="secondary" type="submit">Join bell</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="roomView" class="room-layout" hidden aria-live="polite">
+        <aside class="room-sidebar">
+          <button id="leaveButton" class="back-link" type="button">← Leave this bell</button>
+          <p class="eyebrow">CURRENT BELL</p>
+          <h1 id="roomName">—</h1>
+          <div class="room-code"><span>Room</span><strong id="roomCode">—</strong></div>
+          <button id="copyButton" class="secondary" type="button">Copy private join link</button>
+          <button id="notifyButton" class="quiet full" type="button">Enable browser notifications</button>
+
+          <section class="sidebar-section">
+            <h2>People</h2>
+            <div id="participantList" class="people-list"></div>
+          </section>
+
+          <section class="sidebar-section connection-card">
+            <div><span id="connectionDot" class="connection-dot"></span><strong id="connectionText">Connecting</strong></div>
+            <p id="syncText">Waiting for first server clock sample.</p>
+          </section>
+        </aside>
+
+        <div class="room-main">
+          <section id="timerPanel" class="timer-panel">
+            <div class="timer-topline">
+              <span id="statePill" class="state-pill">Ready</span>
+              <span id="assigneeLabel">No one assigned</span>
+            </div>
+            <div id="timerDigits" class="timer-digits" role="timer" aria-label="Time remaining">--:--</div>
+            <p id="timerSentence" class="timer-sentence">Waiting to start.</p>
+            <div class="control-grid">
+              <button id="startButton" class="primary" type="button">Start</button>
+              <button id="pauseButton" class="secondary" type="button">Pause</button>
+              <button id="resetButton" class="secondary" type="button">Reset</button>
+              <button id="ackButton" class="ack" type="button">I handled it · tell everyone</button>
+              <button id="muteButton" class="quiet" type="button">Mute only this device</button>
+            </div>
+          </section>
+
+          <section class="activity-panel">
+            <div class="section-heading">
+              <div><p class="eyebrow">AUDIT TRAIL</p><h2>What happened</h2></div>
+              <button id="refreshHistoryButton" class="quiet" type="button">Refresh</button>
+            </div>
+            <ol id="eventList" class="event-list"></ol>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" role="status" hidden></div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
